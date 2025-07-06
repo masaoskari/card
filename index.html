@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Heart Reveal Toggle</title>
+    <title>Anniversary card</title>
     <style>
       body {
         margin: 0;
@@ -138,7 +138,7 @@
         // Delay showing card until hearts are done
         setTimeout(() => {
           card.classList.add("visible");
-        }, 1500); // match animation duration
+        }, 1000); // match animation duration
       });
 
       card.addEventListener("click", () => {
@@ -147,28 +147,46 @@
       });
 
       function launchFlyingHearts() {
-        for (let i = 0; i < 25; i++) {
+        const heartCount = 50;
+        const minRadius = 50;
+        const maxRadius = 500;
+        const minSize = 16;
+        const maxSize = 26;
+        const animationDuration = 2000; // ms
+
+        for (let i = 0; i < heartCount; i++) {
           const heart = document.createElement("div");
           heart.className = "flying-heart";
           heart.innerText = "❤️";
 
+          // Random angle (0 to 2π radians)
           const angle = Math.random() * 2 * Math.PI;
-          const radius = Math.random() * 150 + 50;
+
+          // Radius between min and max
+          const radius = Math.random() * (maxRadius - minRadius) + minRadius;
+
+          // Calculate X and Y positions based on angle and radius
           const x = Math.cos(angle) * radius;
           const y = Math.sin(angle) * radius;
+
+          // Random rotation angle for spin effect
           const rotation = Math.floor(Math.random() * 360) + "deg";
 
+          // Random font size between minSize and maxSize
+          const fontSize = Math.random() * (maxSize - minSize) + minSize;
+
+          // Apply CSS variables for animation
           heart.style.setProperty("--x", `${x}px`);
           heart.style.setProperty("--y", `${y}px`);
           heart.style.setProperty("--r", rotation);
-          heart.style.left = `calc(50% - 10px)`;
-          heart.style.top = `calc(50% - 10px)`;
-          heart.style.fontSize = `${Math.random() * 10 + 16}px`;
+          heart.style.left = "calc(50% - 10px)";
+          heart.style.top = "calc(50% - 10px)";
+          heart.style.fontSize = `${fontSize}px`;
 
           container.appendChild(heart);
 
-          // remove after animation ends
-          setTimeout(() => heart.remove(), 2000);
+          // Remove heart element after animation ends
+          setTimeout(() => heart.remove(), animationDuration);
         }
       }
     </script>
