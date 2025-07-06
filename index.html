@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Heart Reveal Toggle</title>
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      .container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      @keyframes jumpBounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        30% {
+          transform: translateY(-15px);
+        }
+        50% {
+          transform: translateY(0);
+        }
+        70% {
+          transform: translateY(-8px);
+        }
+      }
+
+      .heart-btn {
+        background: none;
+        border: none;
+        font-size: 120px;
+        color: #ccc;
+        cursor: pointer;
+        transition: transform 0.3s ease, color 0.3s ease, opacity 0.5s ease;
+        animation: jumpBounce 1.5s infinite ease-in-out;
+        z-index: 2;
+      }
+
+      .heart-btn.clicked {
+        color: red;
+        transform: scale(1.2);
+      }
+
+      .heart-btn.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .card {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 320px;
+        height: 400px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        transition: all 0.8s ease;
+        pointer-events: none;
+        cursor: pointer;
+      }
+
+      .card.visible {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        pointer-events: auto;
+      }
+
+      .card h2 {
+        margin: 10px 0;
+      }
+
+      .card img {
+        width: 100%;
+        height: 220px;
+        border-radius: 15px;
+        object-fit: cover;
+        margin-top: 20px;
+      }
+
+      .flying-heart {
+        position: absolute;
+        font-size: 20px;
+        color: red;
+        opacity: 1;
+        transform: translate(0, 0);
+        animation: fly360 2s ease-out forwards;
+        pointer-events: none;
+        z-index: 10;
+      }
+
+      @keyframes fly360 {
+        to {
+          opacity: 0;
+          transform: translate(var(--x), var(--y)) rotate(var(--r));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <button class="heart-btn" id="heartBtn">❤️</button>
+      <div class="card" id="card">
+        <h2>Happy anniversary day 💘</h2>
+        <img src="we.jpg" alt="Love Image" />
+      </div>
+    </div>
+
+    <script>
+      const heartBtn = document.getElementById("heartBtn");
+      const card = document.getElementById("card");
+      const container = document.querySelector(".container");
+
+      heartBtn.addEventListener("click", () => {
+        heartBtn.classList.add("clicked", "hidden");
+        launchFlyingHearts();
+
+        // Delay showing card until hearts are done
+        setTimeout(() => {
+          card.classList.add("visible");
+        }, 1500); // match animation duration
+      });
+
+      card.addEventListener("click", () => {
+        card.classList.remove("visible");
+        heartBtn.classList.remove("hidden", "clicked");
+      });
+
+      function launchFlyingHearts() {
+        for (let i = 0; i < 25; i++) {
+          const heart = document.createElement("div");
+          heart.className = "flying-heart";
+          heart.innerText = "❤️";
+
+          const angle = Math.random() * 2 * Math.PI;
+          const radius = Math.random() * 150 + 50;
+          const x = Math.cos(angle) * radius;
+          const y = Math.sin(angle) * radius;
+          const rotation = Math.floor(Math.random() * 360) + "deg";
+
+          heart.style.setProperty("--x", `${x}px`);
+          heart.style.setProperty("--y", `${y}px`);
+          heart.style.setProperty("--r", rotation);
+          heart.style.left = `calc(50% - 10px)`;
+          heart.style.top = `calc(50% - 10px)`;
+          heart.style.fontSize = `${Math.random() * 10 + 16}px`;
+
+          container.appendChild(heart);
+
+          // remove after animation ends
+          setTimeout(() => heart.remove(), 2000);
+        }
+      }
+    </script>
+  </body>
+</html>
